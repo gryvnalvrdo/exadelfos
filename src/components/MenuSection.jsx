@@ -317,7 +317,7 @@ export default function MenuSection({
                       loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/20 pointer-events-none" />
 
                     {/* Top badges */}
                     <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
@@ -331,13 +331,6 @@ export default function MenuSection({
                           Favorit
                         </span>
                       )}
-                    </div>
-
-                    {/* Price Tag overlay on image */}
-                    <div className="absolute bottom-3 right-3">
-                      <span className="inline-block bg-white/95 backdrop-blur-md text-exa-orange font-black text-base px-3 py-1 rounded-xl shadow-md border border-orange-100 font-display">
-                        {item.priceDisplay}
-                      </span>
                     </div>
                   </div>
 
