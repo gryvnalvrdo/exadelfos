@@ -95,3 +95,4 @@ export default function BottomNav({ onOpenReview, onOpenOrder, orderCount, order
     </div>
   );
 }
+

@@ -303,3 +303,4 @@ export const SAMPLE_GOOGLE_REVIEWS = [
     comment: 'Good coffee, good people beneran sesuai slogannya. Harga 13k-15k worth it banget kualitasnya.',
   },
 ];
+

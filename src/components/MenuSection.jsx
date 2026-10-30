@@ -394,3 +394,4 @@ export default function MenuSection({ onAddToCart, cartItems = {} }) {
     </section>
   );
 }
+
