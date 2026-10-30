@@ -20,3 +20,4 @@ export default function Toast({ message, isVisible }) {
     </div>
   );
 }
+

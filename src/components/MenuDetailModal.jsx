@@ -213,3 +213,4 @@ export default function MenuDetailModal({ item, isOpen, onClose, onAddToCartWith
     </div>
   );
 }
+
