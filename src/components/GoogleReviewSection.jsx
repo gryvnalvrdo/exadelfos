@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, MapPin, ExternalLink, CheckCircle, Smartphone, Award, ThumbsUp } from 'lucide-react';
+import { Star, MapPin, ExternalLink } from 'lucide-react';
 import { CAFE_INFO } from '../data/menu';
 
 export default function GoogleReviewSection() {
@@ -77,39 +77,6 @@ export default function GoogleReviewSection() {
                   <ExternalLink className="w-4 h-4 opacity-80 ml-0.5" />
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 3 Step NFC Guide Card */}
-        <div className="bg-white/80 rounded-2xl p-5 border border-stone-200/80 shadow-sm">
-          <h4 className="text-xs font-bold text-stone-800 uppercase tracking-wider text-center mb-4">
-            Cara Mudah Beri Ulasan dari Kartu Meja 📱
-          </h4>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-            <div className="p-3 rounded-xl bg-orange-50/50 border border-orange-100">
-              <div className="w-8 h-8 rounded-full bg-exa-orange text-white font-bold text-xs flex items-center justify-center mx-auto mb-2">
-                1
-              </div>
-              <p className="text-xs font-bold text-stone-800">Tap Kartu di Meja</p>
-              <p className="text-[11px] text-stone-500 mt-0.5">Dekatkan smartphone Anda ke kartu Google Review NFC.</p>
-            </div>
-
-            <div className="p-3 rounded-xl bg-emerald-50/50 border border-emerald-100">
-              <div className="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center mx-auto mb-2">
-                2
-              </div>
-              <p className="text-xs font-bold text-stone-800">Pilih Bintang 5 ⭐</p>
-              <p className="text-[11px] text-stone-500 mt-0.5">Beri rating terbaik untuk rasa minuman & keramahan barista.</p>
-            </div>
-
-            <div className="p-3 rounded-xl bg-amber-50/50 border border-amber-100">
-              <div className="w-8 h-8 rounded-full bg-amber-500 text-white font-bold text-xs flex items-center justify-center mx-auto mb-2">
-                3
-              </div>
-              <p className="text-xs font-bold text-stone-800">Kirim & Bagikan</p>
-              <p className="text-[11px] text-stone-500 mt-0.5">Ulasan Anda langsung tampil di Google Maps Exádelfos!</p>
             </div>
           </div>
         </div>
