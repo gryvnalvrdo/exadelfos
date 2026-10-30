@@ -42,43 +42,35 @@ export default function BottomNav({ onOpenCart, orderCount, orderTotal }) {
         </div>
       )}
 
-      {/* Main Bottom Nav: Symmetrical 3-Column Grid */}
+      {/* Main Bottom Nav: Uniform 3-Column Grid */}
       <nav className="glass-nav border-t border-orange-100/80 shadow-lg px-2 py-2">
-        <div className="grid grid-cols-3 items-end max-w-md mx-auto relative">
-          {/* Col 1: Menu Tab (Left) */}
+        <div className="grid grid-cols-3 items-center max-w-md mx-auto">
+          {/* Col 1: Menu Tab */}
           <button
             onClick={scrollToMenu}
             className="flex flex-col items-center justify-center gap-1 text-stone-600 hover:text-exa-orange py-1 active:scale-95 transition"
           >
-            <Coffee className="w-5 h-5 text-stone-600" />
+            <Coffee className="w-5 h-5" />
             <span className="text-[11px] font-bold">Menu</span>
           </button>
 
-          {/* Col 2: Center Google Review Button (Exact 50% Center) */}
-          <div className="flex flex-col items-center justify-center">
-            <button
-              onClick={handleDirectReview}
-              className="flex flex-col items-center justify-center -mt-6 group focus:outline-none"
-              title="Beri Review di Google Maps"
-            >
-              <div className="w-13 h-13 rounded-full bg-gradient-to-tr from-exa-orange via-amber-500 to-orange-400 p-0.5 shadow-floating transform transition group-hover:scale-105 active:scale-95">
-                <div className="w-full h-full rounded-full bg-exa-orange flex items-center justify-center text-white shadow-inner">
-                  <Star className="w-6 h-6 fill-white text-white animate-pulse" />
-                </div>
-              </div>
-              <span className="text-[11px] font-black text-exa-orange mt-1">
-                Review ⭐
-              </span>
-            </button>
-          </div>
+          {/* Col 2: Center Google Review Button (Uniform Size with other icons) */}
+          <button
+            onClick={handleDirectReview}
+            className="flex flex-col items-center justify-center gap-1 text-exa-orange hover:text-exa-orange-600 py-1 active:scale-95 transition"
+            title="Beri Review di Google Maps"
+          >
+            <Star className="w-5 h-5 fill-exa-orange" />
+            <span className="text-[11px] font-bold">Review</span>
+          </button>
 
-          {/* Col 3: Shopping Cart Button (Right) */}
+          {/* Col 3: Shopping Cart Button */}
           <button
             onClick={onOpenCart}
             className="flex flex-col items-center justify-center gap-1 text-stone-600 hover:text-exa-orange py-1 active:scale-95 transition"
           >
             <div className="relative">
-              <ShoppingCart className="w-5 h-5 text-stone-600" />
+              <ShoppingCart className="w-5 h-5" />
               {orderCount > 0 && (
                 <span className="absolute -top-1.5 -right-2 bg-exa-orange text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
                   {orderCount}
