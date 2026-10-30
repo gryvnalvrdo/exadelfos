@@ -14,7 +14,6 @@ import {
   Check, 
   X,
   Flame,
-  Star,
   ChevronDown,
   SlidersHorizontal
 } from 'lucide-react';
@@ -81,9 +80,6 @@ export default function MenuSection({
         break;
       case 'price-high':
         items.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        items.sort((a, b) => b.rating - a.rating);
         break;
       case 'name':
         items.sort((a, b) => a.name.localeCompare(b.name));
@@ -198,7 +194,6 @@ export default function MenuSection({
                 <option value="recommended">⭐ Rekomendasi</option>
                 <option value="price-low">💵 Harga: Termurah (12K)</option>
                 <option value="price-high">💎 Harga: Tertinggi (18K)</option>
-                <option value="rating">🌟 Rating Tertinggi</option>
                 <option value="name">🔤 Nama A - Z</option>
               </select>
               <ArrowUpDown className="w-3.5 h-3.5 text-stone-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -373,12 +368,11 @@ export default function MenuSection({
                   </div>
                 </div>
 
-                {/* Bottom Bar: Rating & Modern Cart Button / Detail Action */}
+                {/* Bottom Bar: Price & Modern Cart Button */}
                 <div className="p-4 sm:p-5 pt-3 border-t border-stone-100 flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-amber-500">
-                    <Star className="w-3.5 h-3.5 fill-current" />
-                    <span className="text-xs font-bold text-stone-700">{item.rating}</span>
-                  </div>
+                  <span className="text-base font-black text-exa-orange font-display">
+                    {item.priceDisplay}
+                  </span>
 
                   {/* Clean Shopping Cart Action */}
                   <button

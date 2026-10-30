@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Star, Flame, Plus, Minus, ShoppingCart, Sparkles, Check } from 'lucide-react';
+import { X, Flame, Plus, Minus, ShoppingCart, Sparkles, Check } from 'lucide-react';
 
 export default function MenuDetailModal({ item, isOpen, onClose, onAddToCartWithOptions }) {
   const [temperature, setTemperature] = useState('Dingin'); // 'Dingin' | 'Hangat'
@@ -69,11 +69,6 @@ export default function MenuDetailModal({ item, isOpen, onClose, onAddToCartWith
               <h3 className="text-xl sm:text-2xl font-black font-display drop-shadow-sm">
                 {item.name}
               </h3>
-              <div className="flex items-center gap-1.5 text-amber-300 text-xs font-bold mt-1">
-                <Star className="w-3.5 h-3.5 fill-current" />
-                <span>{item.rating}</span>
-                <span className="text-white/60 font-normal">({item.reviewsCount} Ulasan)</span>
-              </div>
             </div>
 
             <div className="bg-white/95 backdrop-blur-md text-exa-orange px-3.5 py-1.5 rounded-2xl font-black text-lg font-display shadow-lg shrink-0">
