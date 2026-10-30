@@ -72,33 +72,9 @@ export default function Header({ orderCount, onOpenOrder }) {
               <span>Beri Review Google</span>
               <ExternalLink className="w-4 h-4 ml-0.5 opacity-90" />
             </button>
-          </div>
-
-          {/* Welcome Notice Card - Clean, Centered & Uniform Typography */}
-          <div 
-            onClick={handleDirectReview}
-            className="mt-5 w-full max-w-lg cursor-pointer group bg-white/95 hover:bg-orange-50/40 border border-orange-200/80 hover:border-exa-orange rounded-2xl p-4 text-left shadow-soft transition-all duration-200 flex items-center gap-3.5 active:scale-[0.99]"
-            title="Tulis Review di Google Maps"
-          >
-            {/* Vertically Centered Star Icon */}
-            <div className="w-11 h-11 rounded-2xl bg-orange-100 text-exa-orange flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <Star className="w-5 h-5 fill-exa-orange text-exa-orange" />
-            </div>
-
-            {/* Text with Uniform Typography (No awkward bold/non-bold mix) */}
-            <div className="flex-1 min-w-0">
-              <h4 className="text-xs sm:text-sm font-bold text-stone-900 leading-tight">
-                Terima kasih sudah berkunjung ke Exádelfos! 👋
-              </h4>
-              <p className="text-xs text-stone-600 mt-1 leading-relaxed">
-                Bantu kami dengan ulasan bintang 5 di Google Maps untuk mendukung perkembangan kedai ini.
-              </p>
-            </div>
-
-            {/* Vertically Centered Link Arrow */}
-            <div className="shrink-0 text-stone-400 group-hover:text-exa-orange transition-colors">
-              <ExternalLink className="w-4 h-4" />
-            </div>
+            <p className="text-xs text-stone-500 mt-2 text-center">
+              Bantu kami dengan ulasan bintang 5 di Google Maps ⭐
+            </p>
           </div>
         </div>
       </div>

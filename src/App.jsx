@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import MenuSection from './components/MenuSection';
-import GoogleReviewSection from './components/GoogleReviewSection';
 import Footer from './components/Footer';
 import OrderDrawer from './components/OrderDrawer';
 import BottomNav from './components/BottomNav';
@@ -67,9 +66,6 @@ export default function App() {
           cartItems={cartItems}
           onOpenCart={() => setIsOrderDrawerOpen(true)}
         />
-
-        {/* Dedicated Google Review Section with Place ID */}
-        <GoogleReviewSection />
       </main>
 
       {/* Footer */}
