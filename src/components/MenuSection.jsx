@@ -14,7 +14,8 @@ import {
   Check, 
   X,
   Flame,
-  Star
+  Star,
+  ChevronDown
 } from 'lucide-react';
 import { CATEGORIES, MENU_ITEMS } from '../data/menu';
 
@@ -187,38 +188,60 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
         </div>
       </div>
 
-      {/* 4 Categories Filter Pills */}
-      <div className="mb-6 -mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto no-scrollbar">
-        <div className="flex items-center gap-2 min-w-max pb-1">
-          {CATEGORIES.map((cat) => {
-            const isActive = activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all transform active:scale-95 ${
+      {/* MOBILE ONLY: Clean Category Dropdown Selector (No Horizontal Scroll) */}
+      <div className="sm:hidden mb-5">
+        <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5 block">
+          Pilih Kategori Menu
+        </label>
+        <div className="relative bg-white rounded-2xl border border-stone-200 shadow-sm">
+          <div className="flex items-center gap-2 pl-3.5 pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-exa-orange">
+            {getCategoryIcon(activeCategory)}
+          </div>
+          <select
+            value={activeCategory}
+            onChange={(e) => setActiveCategory(e.target.value)}
+            className="w-full appearance-none bg-transparent text-stone-800 text-xs sm:text-sm font-bold py-3 pl-10 pr-10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-exa-orange cursor-pointer"
+          >
+            {CATEGORIES.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name} ({categoryCounts[cat.id]} Menu)
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="w-4 h-4 text-stone-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        </div>
+      </div>
+
+      {/* DESKTOP ONLY: Category Filter Pills */}
+      <div className="hidden sm:flex items-center gap-2 mb-6 overflow-x-auto no-scrollbar pb-1">
+        {CATEGORIES.map((cat) => {
+          const isActive = activeCategory === cat.id;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all transform active:scale-95 ${
+                isActive
+                  ? 'bg-exa-orange text-white shadow-md shadow-orange-500/25 scale-[1.02]'
+                  : 'bg-white hover:bg-stone-50 text-stone-700 border border-stone-200/90 shadow-sm'
+              }`}
+            >
+              <span className={isActive ? 'text-white' : 'text-exa-orange'}>
+                {getCategoryIcon(cat.id)}
+              </span>
+              <span>{cat.name}</span>
+              <span
+                className={`text-[11px] px-1.5 py-0.5 rounded-full font-semibold ${
                   isActive
-                    ? 'bg-exa-orange text-white shadow-md shadow-orange-500/25 scale-[1.02]'
-                    : 'bg-white hover:bg-stone-50 text-stone-700 border border-stone-200/90 shadow-sm'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-stone-100 text-stone-600'
                 }`}
               >
-                <span className={isActive ? 'text-white' : 'text-exa-orange'}>
-                  {getCategoryIcon(cat.id)}
-                </span>
-                <span>{cat.name}</span>
-                <span
-                  className={`text-[11px] px-1.5 py-0.5 rounded-full font-semibold ${
-                    isActive
-                      ? 'bg-white/20 text-white'
-                      : 'bg-stone-100 text-stone-600'
-                  }`}
-                >
-                  {categoryCounts[cat.id]}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                {categoryCounts[cat.id]}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Empty State */}
