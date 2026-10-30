@@ -95,9 +95,9 @@ export default function Footer() {
                 href={CAFE_INFO.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white underline underline-offset-2"
+                className="hover:text-white transition-colors"
               >
-                @{CAFE_INFO.instagramHandle} ({CAFE_INFO.hashtag})
+                @{CAFE_INFO.instagramHandle}
               </a>
             </div>
           </div>
