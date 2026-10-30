@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Clock, Heart, Navigation, Copy, Check } from 'lucide-react';
+import { MapPin, Clock, Navigation, Copy, Check } from 'lucide-react';
 import { InstagramIcon } from './Icons';
 import { CAFE_INFO } from '../data/menu';
 
@@ -19,7 +19,7 @@ export default function Footer() {
   return (
     <footer className="bg-exa-green-800 text-stone-300 pt-10 pb-24 sm:pb-10 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pb-8 border-b border-exa-green-700/60">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {/* Col 1: Brand Info */}
           <div>
             <div className="flex items-center gap-3 mb-3">
@@ -101,14 +101,6 @@ export default function Footer() {
               </a>
             </div>
           </div>
-        </div>
-
-        {/* Bottom Credits */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-stone-400 text-xs gap-2">
-          <p>© {new Date().getFullYear()} Exádelfos Coffee. All rights reserved.</p>
-          <p className="flex items-center gap-1">
-            Made with <Heart className="w-3.5 h-3.5 fill-exa-orange text-exa-orange" /> for #TemanExa
-          </p>
         </div>
       </div>
     </footer>
