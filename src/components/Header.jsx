@@ -74,50 +74,30 @@ export default function Header({ orderCount, onOpenOrder }) {
             </button>
           </div>
 
-          {/* NFC Tap Welcome Card - Interactive & Aesthetic */}
+          {/* Welcome Notice Card - Clean, Centered & Uniform Typography */}
           <div 
             onClick={handleDirectReview}
-            className="mt-5 w-full max-w-lg cursor-pointer group bg-gradient-to-br from-white via-orange-50/50 to-amber-50/60 border border-orange-200/90 rounded-3xl p-4 sm:p-5 text-left shadow-soft hover:shadow-card hover:border-exa-orange transition-all duration-300 relative overflow-hidden"
+            className="mt-5 w-full max-w-lg cursor-pointer group bg-white/95 hover:bg-orange-50/40 border border-orange-200/80 hover:border-exa-orange rounded-2xl p-4 text-left shadow-soft transition-all duration-200 flex items-center gap-3.5 active:scale-[0.99]"
+            title="Tulis Review di Google Maps"
           >
-            {/* Subtle glow accent */}
-            <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-amber-400/10 to-orange-500/10 rounded-full blur-xl pointer-events-none" />
+            {/* Vertically Centered Star Icon */}
+            <div className="w-11 h-11 rounded-2xl bg-orange-100 text-exa-orange flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <Star className="w-5 h-5 fill-exa-orange text-exa-orange" />
+            </div>
 
-            <div className="flex items-start gap-3.5 relative z-10">
-              {/* Glowing Icon Badge */}
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-exa-orange to-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-orange-500/25 group-hover:scale-105 transition-transform duration-300">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 fill-white/20" />
-              </div>
+            {/* Text with Uniform Typography (No awkward bold/non-bold mix) */}
+            <div className="flex-1 min-w-0">
+              <h4 className="text-xs sm:text-sm font-bold text-stone-900 leading-tight">
+                Terima kasih sudah berkunjung ke Exádelfos! 👋
+              </h4>
+              <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+                Bantu kami dengan ulasan bintang 5 di Google Maps untuk mendukung perkembangan kedai ini.
+              </p>
+            </div>
 
-              {/* Text & Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-exa-green-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Kartu Meja #TemanExa
-                  </span>
-
-                  {/* 5 Shiny Stars */}
-                  <div className="flex items-center text-amber-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                    ))}
-                  </div>
-                </div>
-
-                <h4 className="text-sm sm:text-base font-bold text-stone-900 group-hover:text-exa-orange transition-colors">
-                  Terima kasih sudah ngopi di Exádelfos! 👋
-                </h4>
-
-                <p className="text-xs text-stone-600 mt-1 leading-relaxed">
-                  Ngopi asik hari ini? Ulasan bintang 5 Anda di Google Maps adalah dukungan terbaik untuk barista kami.
-                </p>
-
-                {/* Clickable Action Tag */}
-                <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-exa-orange group-hover:translate-x-1 transition-transform">
-                  <span>Klik untuk beri review bintang 5</span>
-                  <ExternalLink className="w-3.5 h-3.5 ml-0.5" />
-                </div>
-              </div>
+            {/* Vertically Centered Link Arrow */}
+            <div className="shrink-0 text-stone-400 group-hover:text-exa-orange transition-colors">
+              <ExternalLink className="w-4 h-4" />
             </div>
           </div>
         </div>
