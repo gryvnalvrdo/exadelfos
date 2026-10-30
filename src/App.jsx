@@ -4,23 +4,19 @@ import MenuSection from './components/MenuSection';
 import GoogleReviewSection from './components/GoogleReviewSection';
 import InstagramSection from './components/InstagramSection';
 import Footer from './components/Footer';
-import ReviewModal from './components/ReviewModal';
 import OrderDrawer from './components/OrderDrawer';
-import ImageLightbox from './components/ImageLightbox';
 import BottomNav from './components/BottomNav';
-import { MENU_ITEMS } from './data/menu';
+import { MENU_ITEMS, CAFE_INFO } from './data/menu';
 
 export default function App() {
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [isMenuImageOpen, setIsMenuImageOpen] = useState(false);
   const [isOrderDrawerOpen, setIsOrderDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState({});
 
-  // Auto trigger review modal if NFC URL includes ?action=review or #review
+  // Auto redirect / open review if accessed with ?action=review or #review from NFC card
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('action') === 'review' || window.location.hash === '#review') {
-      setIsReviewModalOpen(true);
+      window.open(CAFE_INFO.googleReviewUrl, '_blank', 'noopener,noreferrer');
     }
   }, []);
 
@@ -58,46 +54,38 @@ export default function App() {
     <div className="min-h-screen bg-exa-cream flex flex-col font-sans">
       {/* Hero & Brand Header */}
       <Header
-        onOpenReview={() => setIsReviewModalOpen(true)}
-        onOpenMenuImage={() => setIsMenuImageOpen(true)}
         orderCount={orderCount}
         onOpenOrder={() => setIsOrderDrawerOpen(true)}
       />
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* Interactive Menu Section with 4 Categories & Sorting */}
+        {/* Interactive Menu Section with 4 Categories & Cart */}
         <MenuSection
           onAddToCart={handleAddToCart}
+          onUpdateQuantity={handleUpdateQuantity}
           cartItems={cartItems}
+          onOpenCart={() => setIsOrderDrawerOpen(true)}
         />
 
-        {/* Dedicated Google Review Showcase & Flow */}
-        <GoogleReviewSection
-          onOpenReview={() => setIsReviewModalOpen(true)}
-        />
+        {/* Dedicated Google Review Section with Place ID */}
+        <GoogleReviewSection />
 
         {/* Instagram & Community Section */}
         <InstagramSection />
       </main>
 
       {/* Footer */}
-      <Footer onOpenReview={() => setIsReviewModalOpen(true)} />
+      <Footer />
 
       {/* Mobile Sticky Bottom Navigation */}
       <BottomNav
-        onOpenReview={() => setIsReviewModalOpen(true)}
-        onOpenOrder={() => setIsOrderDrawerOpen(true)}
+        onOpenCart={() => setIsOrderDrawerOpen(true)}
         orderCount={orderCount}
         orderTotal={orderTotal}
       />
 
-      {/* Modals & Drawers */}
-      <ReviewModal
-        isOpen={isReviewModalOpen}
-        onClose={() => setIsReviewModalOpen(false)}
-      />
-
+      {/* Shopping Cart Drawer */}
       <OrderDrawer
         isOpen={isOrderDrawerOpen}
         onClose={() => setIsOrderDrawerOpen(false)}
@@ -105,12 +93,6 @@ export default function App() {
         onUpdateQuantity={handleUpdateQuantity}
         onClearCart={handleClearCart}
       />
-
-      <ImageLightbox
-        isOpen={isMenuImageOpen}
-        onClose={() => setIsMenuImageOpen(false)}
-      />
     </div>
   );
 }
-

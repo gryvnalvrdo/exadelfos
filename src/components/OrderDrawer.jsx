@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Trash2, Plus, Minus, Send, Copy, Check, ShoppingBag, Receipt } from 'lucide-react';
+import { X, Trash2, Plus, Minus, Send, Copy, Check, ShoppingCart, ShoppingBag, Receipt } from 'lucide-react';
 import { CAFE_INFO, MENU_ITEMS } from '../data/menu';
 
 export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuantity, onClearCart }) {
@@ -62,13 +62,13 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
       >
         {/* Header */}
         <div className="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-orange-100 flex items-center justify-center text-exa-orange">
-              <ShoppingBag className="w-4 h-4" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-orange-100 flex items-center justify-center text-exa-orange">
+              <ShoppingCart className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-stone-900">Catatan Pesanan</h3>
-              <p className="text-[11px] text-stone-500">{totalItemsCount} Minuman Terpilih</p>
+              <h3 className="text-base font-bold text-stone-900">Keranjang Pesanan</h3>
+              <p className="text-[11px] text-stone-500">{totalItemsCount} Minuman Dipilih</p>
             </div>
           </div>
 
@@ -77,9 +77,9 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
               <button
                 onClick={onClearCart}
                 className="text-[11px] text-stone-400 hover:text-red-500 font-semibold px-2 py-1 rounded-lg transition"
-                title="Kosongkan Catatan"
+                title="Kosongkan Keranjang"
               >
-                Reset
+                Kosongkan
               </button>
             )}
             <button
@@ -94,11 +94,13 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
         {/* Items List (Scrollable) */}
         <div className="p-4 overflow-y-auto flex-1 space-y-3">
           {selectedList.length === 0 ? (
-            <div className="text-center py-16 text-stone-400">
-              <Receipt className="w-12 h-12 mx-auto text-stone-300 mb-2 stroke-1" />
-              <p className="text-sm font-semibold text-stone-600">Belum ada menu yang dipilih</p>
+            <div className="text-center py-20 text-stone-400">
+              <div className="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center mx-auto mb-3 text-stone-400">
+                <ShoppingCart className="w-8 h-8" />
+              </div>
+              <p className="text-sm font-bold text-stone-700">Keranjang Masih Kosong</p>
               <p className="text-xs text-stone-400 mt-1 max-w-xs mx-auto">
-                Tekan tombol "+ Pilih" pada daftar menu untuk menghitung estimasi atau membuat catatan pesanan.
+                Silakan pilih minuman favorit Anda di menu dengan menekan tombol "+ Keranjang".
               </p>
             </div>
           ) : (
@@ -107,6 +109,11 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
                 key={item.id}
                 className="p-3 rounded-2xl bg-stone-50 border border-stone-200 flex items-center justify-between gap-3"
               >
+                {/* Thumbnail */}
+                <div className="w-12 h-12 rounded-xl overflow-hidden bg-stone-200 shrink-0">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                </div>
+
                 <div className="flex-1 min-w-0">
                   <h4 className="text-xs font-bold text-stone-800 truncate">{item.name}</h4>
                   <p className="text-[11px] text-stone-500">
@@ -114,18 +121,20 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
                   </p>
                 </div>
 
-                {/* Counter */}
+                {/* Counter Stepper */}
                 <div className="flex items-center gap-1.5 bg-white border border-stone-200 rounded-xl p-1 shrink-0">
                   <button
                     onClick={() => onUpdateQuantity(item.id, item.qty - 1)}
                     className="w-6 h-6 rounded-lg hover:bg-stone-100 flex items-center justify-center text-stone-600 active:scale-95"
+                    title="Kurang"
                   >
                     <Minus className="w-3 h-3" />
                   </button>
                   <span className="text-xs font-bold w-5 text-center">{item.qty}</span>
                   <button
                     onClick={() => onUpdateQuantity(item.id, item.qty + 1)}
-                    className="w-6 h-6 rounded-lg hover:bg-stone-100 flex items-center justify-center text-stone-600 active:scale-95"
+                    className="w-6 h-6 rounded-lg bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-700 active:scale-95"
+                    title="Tambah"
                   >
                     <Plus className="w-3 h-3" />
                   </button>
@@ -170,7 +179,7 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
         {selectedList.length > 0 && (
           <div className="p-4 border-t border-stone-200 bg-stone-50 space-y-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-stone-500">Estimasi Total</span>
+              <span className="text-stone-500 font-medium">Estimasi Total</span>
               <span className="text-xl font-black text-exa-orange font-display">
                 {formatRupiah(subtotal)}
               </span>
@@ -182,12 +191,12 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
                 className="inline-flex items-center justify-center gap-1.5 bg-white border border-stone-200 hover:bg-stone-100 text-stone-700 font-bold text-xs py-3 rounded-xl transition"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-stone-500" />}
-                <span>{copied ? 'Tersalin!' : 'Salin Catatan'}</span>
+                <span>{copied ? 'Tersalin!' : 'Salin Pesanan'}</span>
               </button>
 
               <button
                 onClick={handleSendToWhatsApp}
-                className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3 rounded-xl shadow-sm transition"
+                className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3 rounded-xl shadow-sm transition active:scale-95"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Kirim ke Barista</span>
@@ -199,4 +208,3 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
     </div>
   );
 }
-
