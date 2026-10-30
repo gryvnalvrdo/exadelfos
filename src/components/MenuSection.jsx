@@ -144,8 +144,8 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
         </div>
       </div>
 
-      {/* Sticky Search & Sort Bar */}
-      <div className="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-stone-200 shadow-soft mb-6 sticky top-2 z-20">
+      {/* Search & Sort Bar (Clean non-sticky flow) */}
+      <div className="bg-white p-3 rounded-2xl border border-stone-200 shadow-soft mb-6">
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Search Input */}
           <div className="relative flex-1">

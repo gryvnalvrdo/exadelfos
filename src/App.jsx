@@ -6,6 +6,7 @@ import InstagramSection from './components/InstagramSection';
 import Footer from './components/Footer';
 import OrderDrawer from './components/OrderDrawer';
 import BottomNav from './components/BottomNav';
+import ScrollToTop from './components/ScrollToTop';
 import { MENU_ITEMS, CAFE_INFO } from './data/menu';
 
 export default function App() {
@@ -93,6 +94,9 @@ export default function App() {
         onUpdateQuantity={handleUpdateQuantity}
         onClearCart={handleClearCart}
       />
+
+      {/* Floating Scroll To Top Button */}
+      <ScrollToTop />
     </div>
   );
 }
