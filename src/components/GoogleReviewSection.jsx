@@ -67,25 +67,15 @@ export default function GoogleReviewSection() {
                 Klik tombol di bawah untuk langsung membuka formulir ulasan Google Maps di perangkat Anda:
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 w-full">
+              <div className="w-full">
                 <button
                   onClick={handleWriteReview}
-                  className="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-exa-orange to-orange-500 hover:from-exa-orange-600 hover:to-orange-600 text-white font-bold text-sm px-6 py-3.5 rounded-2xl shadow-floating hover:shadow-lg transition-all active:scale-95"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-exa-orange to-orange-500 hover:from-exa-orange-600 hover:to-orange-600 text-white font-bold text-sm sm:text-base px-6 py-3.5 rounded-2xl shadow-floating hover:shadow-lg transition-all active:scale-95"
                 >
                   <Star className="w-4 h-4 fill-white text-white" />
-                  <span>Tulis Review Sekarang</span>
-                  <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                  <span>Tulis Review Bintang 5 di Google</span>
+                  <ExternalLink className="w-4 h-4 opacity-80 ml-0.5" />
                 </button>
-
-                <a
-                  href={CAFE_INFO.googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs sm:text-sm px-4 py-3.5 rounded-2xl transition-colors"
-                >
-                  <span>Buka di Google Maps</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-stone-500" />
-                </a>
               </div>
             </div>
           </div>
