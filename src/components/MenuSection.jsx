@@ -15,14 +15,21 @@ import {
   X,
   Flame,
   Star,
-  ChevronDown
+  ChevronDown,
+  SlidersHorizontal
 } from 'lucide-react';
 import { CATEGORIES, MENU_ITEMS } from '../data/menu';
 
-export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems = {}, onOpenCart }) {
+export default function MenuSection({ 
+  onAddToCart, 
+  onUpdateQuantity, 
+  cartItems = {}, 
+  onOpenDetailModal 
+}) {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('recommended');
+  const [onlyFavorites, setOnlyFavorites] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
 
   // Map category icons
@@ -48,6 +55,11 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
     // Category filter
     if (activeCategory !== 'all') {
       items = items.filter((item) => item.category === activeCategory);
+    }
+
+    // Only Favorites filter toggle
+    if (onlyFavorites) {
+      items = items.filter((item) => item.popular);
     }
 
     // Search query filter
@@ -84,7 +96,7 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
     }
 
     return items;
-  }, [activeCategory, searchQuery, sortBy]);
+  }, [activeCategory, searchQuery, sortBy, onlyFavorites]);
 
   // Counts per category
   const categoryCounts = useMemo(() => {
@@ -96,6 +108,13 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
     });
     return counts;
   }, []);
+
+  // Compute total quantity of an item in cart (aggregating variations)
+  const getItemQuantityInCart = (itemId) => {
+    return Object.values(cartItems)
+      .filter((ci) => ci.id === itemId)
+      .reduce((sum, ci) => sum + ci.qty, 0);
+  };
 
   return (
     <section id="menu-section" className="py-8 px-4 sm:px-6 max-w-4xl mx-auto">
@@ -110,7 +129,7 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
             Menu Kopi & Segar
           </h2>
           <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
-            Semua minuman diracik segar dari bahan berkualitas terbaik.
+            Sentuh menu untuk melihat foto besar & kustomisasi suhu/gula.
           </p>
         </div>
 
@@ -145,8 +164,8 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
         </div>
       </div>
 
-      {/* Search & Sort Bar (Clean non-sticky flow) */}
-      <div className="bg-white p-3 rounded-2xl border border-stone-200 shadow-soft mb-6">
+      {/* Search & Sort Bar */}
+      <div className="bg-white p-3 rounded-2xl border border-stone-200 shadow-soft mb-4">
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Search Input */}
           <div className="relative flex-1">
@@ -188,19 +207,17 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
         </div>
       </div>
 
-      {/* MOBILE ONLY: Clean Category Dropdown Selector (No Horizontal Scroll) */}
-      <div className="sm:hidden mb-5">
-        <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5 block">
-          Pilih Kategori Menu
-        </label>
-        <div className="relative bg-white rounded-2xl border border-stone-200 shadow-sm">
+      {/* Quick Filter: Best Seller Toggle & Category Selector */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
+        {/* MOBILE: Category Dropdown */}
+        <div className="sm:hidden flex-1 relative bg-white rounded-2xl border border-stone-200 shadow-sm">
           <div className="flex items-center gap-2 pl-3.5 pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-exa-orange">
             {getCategoryIcon(activeCategory)}
           </div>
           <select
             value={activeCategory}
             onChange={(e) => setActiveCategory(e.target.value)}
-            className="w-full appearance-none bg-transparent text-stone-800 text-xs sm:text-sm font-bold py-3 pl-10 pr-10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-exa-orange cursor-pointer"
+            className="w-full appearance-none bg-transparent text-stone-800 text-xs sm:text-sm font-bold py-2.5 pl-10 pr-10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-exa-orange cursor-pointer"
           >
             {CATEGORIES.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -210,38 +227,53 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
           </select>
           <ChevronDown className="w-4 h-4 text-stone-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
-      </div>
 
-      {/* DESKTOP ONLY: Category Filter Pills */}
-      <div className="hidden sm:flex items-center gap-2 mb-6 overflow-x-auto no-scrollbar pb-1">
-        {CATEGORIES.map((cat) => {
-          const isActive = activeCategory === cat.id;
-          return (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all transform active:scale-95 ${
-                isActive
-                  ? 'bg-exa-orange text-white shadow-md shadow-orange-500/25 scale-[1.02]'
-                  : 'bg-white hover:bg-stone-50 text-stone-700 border border-stone-200/90 shadow-sm'
-              }`}
-            >
-              <span className={isActive ? 'text-white' : 'text-exa-orange'}>
-                {getCategoryIcon(cat.id)}
-              </span>
-              <span>{cat.name}</span>
-              <span
-                className={`text-[11px] px-1.5 py-0.5 rounded-full font-semibold ${
+        {/* DESKTOP: Category Filter Pills */}
+        <div className="hidden sm:flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all transform active:scale-95 ${
                   isActive
-                    ? 'bg-white/20 text-white'
-                    : 'bg-stone-100 text-stone-600'
+                    ? 'bg-exa-orange text-white shadow-md shadow-orange-500/25 scale-[1.02]'
+                    : 'bg-white hover:bg-stone-50 text-stone-700 border border-stone-200/90 shadow-sm'
                 }`}
               >
-                {categoryCounts[cat.id]}
-              </span>
-            </button>
-          );
-        })}
+                <span className={isActive ? 'text-white' : 'text-exa-orange'}>
+                  {getCategoryIcon(cat.id)}
+                </span>
+                <span>{cat.name}</span>
+                <span
+                  className={`text-[11px] px-1.5 py-0.5 rounded-full font-semibold ${
+                    isActive
+                      ? 'bg-white/20 text-white'
+                      : 'bg-stone-100 text-stone-600'
+                  }`}
+                >
+                  {categoryCounts[cat.id]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Feature 4: Best Seller / Favorit Filter Button Toggle */}
+        <button
+          onClick={() => setOnlyFavorites((prev) => !prev)}
+          className={`shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold transition-all border ${
+            onlyFavorites
+              ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white border-transparent shadow-sm'
+              : 'bg-white text-stone-700 border-stone-200 hover:border-orange-300'
+          }`}
+          title="Filter hanya menu favorit"
+        >
+          <Flame className={`w-3.5 h-3.5 ${onlyFavorites ? 'fill-white text-white' : 'text-exa-orange fill-exa-orange'}`} />
+          <span>Favorit Saja</span>
+          {onlyFavorites && <Check className="w-3.5 h-3.5 ml-0.5" />}
+        </button>
       </div>
 
       {/* Empty State */}
@@ -252,33 +284,38 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
           </div>
           <h3 className="text-base font-bold text-stone-800">Menu Tidak Ditemukan</h3>
           <p className="text-xs text-stone-500 mt-1 max-w-sm mx-auto">
-            Tidak ada menu yang cocok dengan kata kunci "{searchQuery}". Coba kata kunci lain atau reset filter.
+            Tidak ada menu yang cocok dengan filter saat ini.
           </p>
           <button
             onClick={() => {
               setSearchQuery('');
               setActiveCategory('all');
+              setOnlyFavorites(false);
             }}
             className="mt-4 px-4 py-2 bg-stone-800 hover:bg-stone-900 text-white font-semibold text-xs rounded-xl transition"
           >
-            Tampilkan Semua Menu
+            Reset Semua Filter
           </button>
         </div>
       )}
 
-      {/* GRID VIEW WITH HD PHOTOS & SHOPPING CART CONTROLS */}
+      {/* GRID VIEW WITH HD PHOTOS & MODAL DETAIL TRIGGER */}
       {viewMode === 'grid' && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5">
           {filteredAndSortedItems.map((item) => {
-            const quantityInCart = cartItems[item.id] || 0;
+            const quantityInCart = getItemQuantityInCart(item.id);
             return (
               <div
                 key={item.id}
                 className="group relative bg-white rounded-3xl overflow-hidden border border-stone-200/80 shadow-sm hover:shadow-card hover:border-orange-200 transition-all duration-200 flex flex-col justify-between"
               >
                 <div>
-                  {/* HD Image Banner with category and price overlays */}
-                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-stone-100">
+                  {/* HD Image Banner - Clickable to open Detail Modal */}
+                  <div 
+                    onClick={() => onOpenDetailModal(item)}
+                    className="relative aspect-[16/10] w-full overflow-hidden bg-stone-100 cursor-pointer"
+                    title="Sentuh untuk kustomisasi & detail menu"
+                  >
                     <img
                       src={item.image}
                       alt={item.name}
@@ -309,8 +346,11 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
                     </div>
                   </div>
 
-                  {/* Card Content */}
-                  <div className="p-4 sm:p-5 pb-2">
+                  {/* Card Content - Clickable to open Detail Modal */}
+                  <div 
+                    onClick={() => onOpenDetailModal(item)}
+                    className="p-4 sm:p-5 pb-2 cursor-pointer"
+                  >
                     <h3 className="text-base sm:text-lg font-bold text-stone-900 group-hover:text-exa-orange transition-colors">
                       {item.name}
                     </h3>
@@ -333,7 +373,7 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
                   </div>
                 </div>
 
-                {/* Bottom Bar: Rating & Modern Cart Button / Stepper */}
+                {/* Bottom Bar: Rating & Modern Cart Button / Detail Action */}
                 <div className="p-4 sm:p-5 pt-3 border-t border-stone-100 flex items-center justify-between">
                   <div className="flex items-center gap-1 text-amber-500">
                     <Star className="w-3.5 h-3.5 fill-current" />
@@ -341,39 +381,17 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
                   </div>
 
                   {/* Clean Shopping Cart Action */}
-                  {quantityInCart === 0 ? (
-                    <button
-                      onClick={() => onAddToCart(item)}
-                      className="inline-flex items-center gap-2 bg-orange-50 hover:bg-exa-orange text-exa-orange hover:text-white font-bold text-xs py-2 px-3.5 rounded-xl border border-orange-200 shadow-sm transition-all transform active:scale-95"
-                    >
-                      <ShoppingCart className="w-3.5 h-3.5" />
-                      <span>+ Keranjang</span>
-                    </button>
-                  ) : (
-                    /* Modern Stepper Counter with Cart Icon */
-                    <div className="inline-flex items-center bg-exa-green-50 border border-exa-green-300 rounded-xl p-0.5 shadow-sm">
-                      <button
-                        onClick={() => onUpdateQuantity(item.id, quantityInCart - 1)}
-                        className="w-7 h-7 rounded-lg bg-white text-stone-700 hover:bg-red-50 hover:text-red-600 flex items-center justify-center font-bold text-sm shadow-2xs transition active:scale-90"
-                        title="Kurangi"
-                      >
-                        <Minus className="w-3.5 h-3.5" />
-                      </button>
-
-                      <div className="px-2.5 flex items-center gap-1 text-exa-green-900 font-extrabold text-xs">
-                        <ShoppingCart className="w-3 h-3 text-exa-green-600" />
-                        <span>{quantityInCart}</span>
-                      </div>
-
-                      <button
-                        onClick={() => onUpdateQuantity(item.id, quantityInCart + 1)}
-                        className="w-7 h-7 rounded-lg bg-exa-green-700 text-white hover:bg-exa-green-800 flex items-center justify-center font-bold text-sm shadow-2xs transition active:scale-90"
-                        title="Tambah"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  )}
+                  <button
+                    onClick={() => onOpenDetailModal(item)}
+                    className={`inline-flex items-center gap-2 font-bold text-xs py-2 px-3.5 rounded-xl border shadow-sm transition-all transform active:scale-95 ${
+                      quantityInCart > 0
+                        ? 'bg-exa-green-50 border-exa-green-300 text-exa-green-800'
+                        : 'bg-orange-50 hover:bg-exa-orange text-exa-orange hover:text-white border-orange-200'
+                    }`}
+                  >
+                    <ShoppingCart className="w-3.5 h-3.5" />
+                    <span>{quantityInCart > 0 ? `Pilih Tambahan (${quantityInCart})` : '+ Keranjang'}</span>
+                  </button>
                 </div>
               </div>
             );
@@ -381,18 +399,21 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
         </div>
       )}
 
-      {/* LIST VIEW WITH THUMBNAIL PHOTOS & SHOPPING CART CONTROLS */}
+      {/* LIST VIEW WITH THUMBNAIL PHOTOS & MODAL DETAIL TRIGGER */}
       {viewMode === 'list' && (
         <div className="space-y-3">
           {filteredAndSortedItems.map((item) => {
-            const quantityInCart = cartItems[item.id] || 0;
+            const quantityInCart = getItemQuantityInCart(item.id);
             return (
               <div
                 key={item.id}
                 className="bg-white rounded-2xl p-3 sm:p-4 border border-stone-200/80 shadow-sm hover:shadow-md transition-all flex items-center gap-3 sm:gap-4"
               >
-                {/* Thumbnail Image */}
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-stone-100 shrink-0 relative">
+                {/* Thumbnail Image - Clickable */}
+                <div 
+                  onClick={() => onOpenDetailModal(item)}
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-stone-100 shrink-0 relative cursor-pointer"
+                >
                   <img
                     src={item.image}
                     alt={item.name}
@@ -406,8 +427,11 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
                   )}
                 </div>
 
-                {/* Details */}
-                <div className="flex-1 min-w-0">
+                {/* Details - Clickable */}
+                <div 
+                  onClick={() => onOpenDetailModal(item)}
+                  className="flex-1 min-w-0 cursor-pointer"
+                >
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-stone-100 text-stone-600">
                       {item.categoryName}
@@ -424,36 +448,22 @@ export default function MenuSection({ onAddToCart, onUpdateQuantity, cartItems =
                   </p>
                 </div>
 
-                {/* Right Action: Stepper or Cart button */}
+                {/* Right Action */}
                 <div className="shrink-0">
-                  {quantityInCart === 0 ? (
-                    <button
-                      onClick={() => onAddToCart(item)}
-                      className="w-9 h-9 sm:w-auto sm:px-3 sm:py-2 rounded-xl bg-orange-50 hover:bg-exa-orange text-exa-orange hover:text-white border border-orange-200 flex items-center justify-center gap-1.5 text-xs font-bold transition active:scale-95"
-                      title="Tambah ke Keranjang"
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                      <span className="hidden sm:inline">+ Keranjang</span>
-                    </button>
-                  ) : (
-                    <div className="inline-flex items-center bg-exa-green-50 border border-exa-green-300 rounded-xl p-0.5 shadow-sm">
-                      <button
-                        onClick={() => onUpdateQuantity(item.id, quantityInCart - 1)}
-                        className="w-7 h-7 rounded-lg bg-white text-stone-700 hover:bg-red-50 hover:text-red-600 flex items-center justify-center font-bold text-sm shadow-2xs transition active:scale-90"
-                      >
-                        <Minus className="w-3 h-3" />
-                      </button>
-                      <span className="w-6 text-center text-xs font-black text-exa-green-900">
-                        {quantityInCart}
-                      </span>
-                      <button
-                        onClick={() => onUpdateQuantity(item.id, quantityInCart + 1)}
-                        className="w-7 h-7 rounded-lg bg-exa-green-700 text-white hover:bg-exa-green-800 flex items-center justify-center font-bold text-sm shadow-2xs transition active:scale-90"
-                      >
-                        <Plus className="w-3 h-3" />
-                      </button>
-                    </div>
-                  )}
+                  <button
+                    onClick={() => onOpenDetailModal(item)}
+                    className={`w-9 h-9 sm:w-auto sm:px-3 sm:py-2 rounded-xl border flex items-center justify-center gap-1.5 text-xs font-bold transition active:scale-95 ${
+                      quantityInCart > 0
+                        ? 'bg-exa-green-50 border-exa-green-300 text-exa-green-800'
+                        : 'bg-orange-50 hover:bg-exa-orange text-exa-orange hover:text-white border-orange-200'
+                    }`}
+                    title="Pilih & Atur Varian"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    <span className="hidden sm:inline">
+                      {quantityInCart > 0 ? `(${quantityInCart})` : '+ Keranjang'}
+                    </span>
+                  </button>
                 </div>
               </div>
             );

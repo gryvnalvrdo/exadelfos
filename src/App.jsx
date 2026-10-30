@@ -3,13 +3,18 @@ import Header from './components/Header';
 import MenuSection from './components/MenuSection';
 import Footer from './components/Footer';
 import OrderDrawer from './components/OrderDrawer';
+import MenuDetailModal from './components/MenuDetailModal';
+import Toast from './components/Toast';
 import BottomNav from './components/BottomNav';
 import ScrollToTop from './components/ScrollToTop';
-import { MENU_ITEMS, CAFE_INFO } from './data/menu';
+import { CAFE_INFO } from './data/menu';
 
 export default function App() {
   const [isOrderDrawerOpen, setIsOrderDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState({});
+  const [detailItem, setDetailItem] = useState(null);
+  const [toastMessage, setToastMessage] = useState('');
+  const [isToastVisible, setIsToastVisible] = useState(false);
 
   // Auto redirect / open review if accessed with ?action=review or #review from NFC card
   useEffect(() => {
@@ -19,20 +24,50 @@ export default function App() {
     }
   }, []);
 
-  const handleAddToCart = (item) => {
-    setCartItems((prev) => {
-      const currentQty = prev[item.id] || 0;
-      return { ...prev, [item.id]: currentQty + 1 };
-    });
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setIsToastVisible(true);
+    setTimeout(() => {
+      setIsToastVisible(false);
+    }, 2200);
   };
 
-  const handleUpdateQuantity = (itemId, newQty) => {
+  // Add item with options (temperature, sugar level, notes)
+  const handleAddToCartWithOptions = (item, qty = 1, options = {}) => {
+    const temp = options.temperature || 'Dingin';
+    const sugar = options.sugarLevel || 'Normal';
+    const notes = options.notes || '';
+    const cartKey = `${item.id}_${temp}_${sugar}_${notes}`;
+
+    setCartItems((prev) => {
+      const existing = prev[cartKey];
+      const newQty = existing ? existing.qty + qty : qty;
+      return {
+        ...prev,
+        [cartKey]: {
+          cartKey,
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          qty: newQty,
+          temperature: temp,
+          sugarLevel: sugar,
+          notes,
+        },
+      };
+    });
+
+    showToast(`${item.name} (${qty}x) ditambahkan ke keranjang`);
+  };
+
+  const handleUpdateQuantity = (cartKey, newQty) => {
     setCartItems((prev) => {
       const updated = { ...prev };
       if (newQty <= 0) {
-        delete updated[itemId];
-      } else {
-        updated[itemId] = newQty;
+        delete updated[cartKey];
+      } else if (updated[cartKey]) {
+        updated[cartKey] = { ...updated[cartKey], qty: newQty };
       }
       return updated;
     });
@@ -43,11 +78,8 @@ export default function App() {
   };
 
   // Calculate order counts & total
-  const orderCount = Object.values(cartItems).reduce((a, b) => a + b, 0);
-  const orderTotal = Object.entries(cartItems).reduce((sum, [id, qty]) => {
-    const item = MENU_ITEMS.find((m) => m.id === id);
-    return sum + (item ? item.price * qty : 0);
-  }, 0);
+  const orderCount = Object.values(cartItems).reduce((sum, item) => sum + (item.qty || 0), 0);
+  const orderTotal = Object.values(cartItems).reduce((sum, item) => sum + (item.price * item.qty || 0), 0);
 
   return (
     <div className="min-h-screen bg-exa-cream flex flex-col font-sans">
@@ -61,10 +93,8 @@ export default function App() {
       <main className="flex-1">
         {/* Interactive Menu Section with 4 Categories & Cart */}
         <MenuSection
-          onAddToCart={handleAddToCart}
-          onUpdateQuantity={handleUpdateQuantity}
           cartItems={cartItems}
-          onOpenCart={() => setIsOrderDrawerOpen(true)}
+          onOpenDetailModal={(item) => setDetailItem(item)}
         />
       </main>
 
@@ -78,6 +108,14 @@ export default function App() {
         orderTotal={orderTotal}
       />
 
+      {/* Drink Detail & Customization Modal */}
+      <MenuDetailModal
+        item={detailItem}
+        isOpen={Boolean(detailItem)}
+        onClose={() => setDetailItem(null)}
+        onAddToCartWithOptions={handleAddToCartWithOptions}
+      />
+
       {/* Shopping Cart Drawer */}
       <OrderDrawer
         isOpen={isOrderDrawerOpen}
@@ -86,6 +124,9 @@ export default function App() {
         onUpdateQuantity={handleUpdateQuantity}
         onClearCart={handleClearCart}
       />
+
+      {/* Floating Toast Notification */}
+      <Toast message={toastMessage} isVisible={isToastVisible} />
 
       {/* Floating Scroll To Top Button */}
       <ScrollToTop />

@@ -1,9 +1,21 @@
-import React from 'react';
-import { MapPin, Clock, Heart } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Clock, Heart, Navigation, Copy, Check } from 'lucide-react';
 import { InstagramIcon } from './Icons';
 import { CAFE_INFO } from '../data/menu';
 
 export default function Footer() {
+  const [addressCopied, setAddressCopied] = useState(false);
+
+  const handleCopyAddress = () => {
+    navigator.clipboard.writeText(CAFE_INFO.address);
+    setAddressCopied(true);
+    setTimeout(() => setAddressCopied(false), 2000);
+  };
+
+  const handleOpenDirections = () => {
+    window.open(CAFE_INFO.googleMapsUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <footer className="bg-exa-green-800 text-stone-300 pt-10 pb-24 sm:pb-10 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
@@ -26,19 +38,57 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Col 2: Informasi Kedai & Jam Operasional */}
-          <div className="space-y-2.5 text-xs sm:text-right">
-            <h5 className="text-white font-bold uppercase tracking-wider text-xs mb-3 text-orange-300">
+          {/* Col 2: Informasi Kedai & Lokasi Cepat */}
+          <div className="space-y-3 text-xs sm:text-right">
+            <h5 className="text-white font-bold uppercase tracking-wider text-xs mb-2 text-orange-300">
               Informasi Kedai
             </h5>
-            <div className="flex items-start gap-2 sm:justify-end">
-              <MapPin className="w-4 h-4 text-exa-orange shrink-0 mt-0.5" />
-              <span>{CAFE_INFO.address}</span>
+
+            {/* Address with Quick Actions */}
+            <div>
+              <div className="flex items-start gap-2 sm:justify-end">
+                <MapPin className="w-4 h-4 text-exa-orange shrink-0 mt-0.5" />
+                <span>{CAFE_INFO.address}</span>
+              </div>
+
+              {/* Direction & Copy buttons */}
+              <div className="mt-2 flex items-center gap-2 sm:justify-end">
+                <button
+                  onClick={handleOpenDirections}
+                  className="inline-flex items-center gap-1 bg-exa-green-700 hover:bg-exa-green-600 text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold transition active:scale-95"
+                  title="Buka Rute di Google Maps"
+                >
+                  <Navigation className="w-3 h-3 text-orange-300" />
+                  <span>Rute Maps</span>
+                </button>
+
+                <button
+                  onClick={handleCopyAddress}
+                  className="inline-flex items-center gap-1 bg-exa-green-900/60 hover:bg-exa-green-700 text-stone-300 hover:text-white px-2.5 py-1 rounded-lg text-[11px] transition active:scale-95 border border-exa-green-700/60"
+                  title="Salin Alamat"
+                >
+                  {addressCopied ? (
+                    <>
+                      <Check className="w-3 h-3 text-emerald-400" />
+                      <span className="text-emerald-300 font-semibold">Tersalin</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>Salin Alamat</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="flex items-start gap-2 sm:justify-end">
+
+            {/* Operating Hours */}
+            <div className="flex items-start gap-2 sm:justify-end pt-1">
               <Clock className="w-4 h-4 text-exa-orange shrink-0 mt-0.5" />
               <span>{CAFE_INFO.operatingHours}</span>
             </div>
+
+            {/* Instagram */}
             <div className="flex items-start gap-2 sm:justify-end">
               <InstagramIcon className="w-4 h-4 text-pink-400 shrink-0 mt-0.5" />
               <a

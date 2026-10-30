@@ -1,21 +1,16 @@
 import React, { useState } from 'react';
-import { X, Trash2, Plus, Minus, Send, Copy, Check, ShoppingCart, ShoppingBag, Receipt } from 'lucide-react';
-import { CAFE_INFO, MENU_ITEMS } from '../data/menu';
+import { X, Trash2, Plus, Minus, Send, Copy, Check, ShoppingCart, ShoppingBag } from 'lucide-react';
+import { CAFE_INFO } from '../data/menu';
 
 export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuantity, onClearCart }) {
   const [tableNumber, setTableNumber] = useState('');
-  const [notes, setNotes] = useState('');
+  const [orderNotes, setOrderNotes] = useState('');
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
-  // Build items list
-  const selectedList = Object.entries(cartItems)
-    .map(([itemId, qty]) => {
-      const item = MENU_ITEMS.find((m) => m.id === itemId);
-      return item ? { ...item, qty } : null;
-    })
-    .filter((item) => item && item.qty > 0);
+  // Items in cart
+  const selectedList = Object.values(cartItems).filter((item) => item && item.qty > 0);
 
   const subtotal = selectedList.reduce((acc, curr) => acc + curr.price * curr.qty, 0);
   const totalItemsCount = selectedList.reduce((acc, curr) => acc + curr.qty, 0);
@@ -26,18 +21,25 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
 
   const generateOrderText = () => {
     let text = `*PESANAN EXÁDELFOS COFFEE*\n`;
-    if (tableNumber) text += `📍 Nomor Meja: ${tableNumber}\n`;
+    if (tableNumber.trim()) text += `📍 Nomor Meja: ${tableNumber.trim()}\n`;
     text += `📅 Waktu: ${new Date().toLocaleDateString('id-ID', { hour: '2-digit', minute: '2-digit' })}\n`;
     text += `--------------------------------\n`;
 
     selectedList.forEach((it) => {
       text += `• ${it.name} (${it.qty}x) = ${formatRupiah(it.price * it.qty)}\n`;
+      const options = [];
+      if (it.temperature) options.push(it.temperature);
+      if (it.sugarLevel) options.push(`Gula: ${it.sugarLevel}`);
+      if (it.notes) options.push(`Catatan: "${it.notes}"`);
+      if (options.length > 0) {
+        text += `  └ [${options.join(' | ')}]\n`;
+      }
     });
 
     text += `--------------------------------\n`;
     text += `*TOTAL ESTIMASI: ${formatRupiah(subtotal)}*\n`;
-    if (notes.trim()) {
-      text += `Catatan: ${notes.trim()}\n`;
+    if (orderNotes.trim()) {
+      text += `Catatan Tambahan: ${orderNotes.trim()}\n`;
     }
     text += `\n#GoodCoffeeGoodPeople`;
     return text;
@@ -106,7 +108,7 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
           ) : (
             selectedList.map((item) => (
               <div
-                key={item.id}
+                key={item.cartKey}
                 className="p-3 rounded-2xl bg-stone-50 border border-stone-200 flex items-center justify-between gap-3"
               >
                 {/* Thumbnail */}
@@ -116,7 +118,29 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
 
                 <div className="flex-1 min-w-0">
                   <h4 className="text-xs font-bold text-stone-800 truncate">{item.name}</h4>
-                  <p className="text-[11px] text-stone-500">
+                  
+                  {/* Customization pills if available */}
+                  {(item.temperature || item.sugarLevel || item.notes) && (
+                    <div className="flex flex-wrap gap-1 mt-0.5">
+                      {item.temperature && (
+                        <span className="text-[10px] bg-white border border-stone-200 text-stone-600 px-1.5 py-0.2 rounded">
+                          {item.temperature}
+                        </span>
+                      )}
+                      {item.sugarLevel && (
+                        <span className="text-[10px] bg-white border border-stone-200 text-stone-600 px-1.5 py-0.2 rounded">
+                          {item.sugarLevel}
+                        </span>
+                      )}
+                      {item.notes && (
+                        <span className="text-[10px] bg-orange-50 border border-orange-200 text-exa-orange px-1.5 py-0.2 rounded truncate max-w-[140px]">
+                          "{item.notes}"
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  <p className="text-[11px] text-stone-500 mt-1">
                     {formatRupiah(item.price)} × {item.qty} = <span className="font-semibold text-stone-800">{formatRupiah(item.price * item.qty)}</span>
                   </p>
                 </div>
@@ -124,7 +148,7 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
                 {/* Counter Stepper */}
                 <div className="flex items-center gap-1.5 bg-white border border-stone-200 rounded-xl p-1 shrink-0">
                   <button
-                    onClick={() => onUpdateQuantity(item.id, item.qty - 1)}
+                    onClick={() => onUpdateQuantity(item.cartKey, item.qty - 1)}
                     className="w-6 h-6 rounded-lg hover:bg-stone-100 flex items-center justify-center text-stone-600 active:scale-95"
                     title="Kurang"
                   >
@@ -132,7 +156,7 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
                   </button>
                   <span className="text-xs font-bold w-5 text-center">{item.qty}</span>
                   <button
-                    onClick={() => onUpdateQuantity(item.id, item.qty + 1)}
+                    onClick={() => onUpdateQuantity(item.cartKey, item.qty + 1)}
                     className="w-6 h-6 rounded-lg bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-700 active:scale-95"
                     title="Tambah"
                   >
@@ -161,13 +185,13 @@ export default function OrderDrawer({ isOpen, onClose, cartItems, onUpdateQuanti
 
               <div>
                 <label className="text-[11px] font-bold text-stone-700 block mb-1">
-                  Catatan Rasa (Less Sugar / Less Ice):
+                  Catatan Tambahan untuk Kasir:
                 </label>
                 <input
                   type="text"
-                  placeholder="Contoh: Exadelfos Aren less ice"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Contoh: Tolong disajikan bersamaan"
+                  value={orderNotes}
+                  onChange={(e) => setOrderNotes(e.target.value)}
                   className="w-full text-xs p-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-exa-orange"
                 />
               </div>
