@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, ShoppingCart, ExternalLink } from 'lucide-react';
+import { Star, ShoppingCart, ExternalLink, Sparkles } from 'lucide-react';
 import { CAFE_INFO } from '../data/menu';
 
 export default function Header({ orderCount, onOpenOrder }) {
@@ -74,18 +74,50 @@ export default function Header({ orderCount, onOpenOrder }) {
             </button>
           </div>
 
-          {/* Review Card Tap Notice */}
-          <div className="mt-5 w-full max-w-lg bg-gradient-to-r from-orange-100/70 via-white/80 to-emerald-50/80 border border-orange-200/70 rounded-2xl p-3.5 text-left flex items-start gap-3 shadow-soft">
-            <div className="w-9 h-9 rounded-xl bg-exa-orange/10 flex items-center justify-center text-exa-orange shrink-0 mt-0.5">
-              <Star className="w-5 h-5 fill-exa-orange text-exa-orange" />
-            </div>
-            <div className="flex-1 text-xs">
-              <p className="font-bold text-stone-800">
-                Terima kasih sudah berkunjung ke Exádelfos! 👋
-              </p>
-              <p className="text-stone-600 mt-0.5">
-                Bantu barista kami dengan review bintang 5 di Google Maps. Tekan tombol <strong>Beri Review Google</strong> di atas untuk menulis langsung!
-              </p>
+          {/* NFC Tap Welcome Card - Interactive & Aesthetic */}
+          <div 
+            onClick={handleDirectReview}
+            className="mt-5 w-full max-w-lg cursor-pointer group bg-gradient-to-br from-white via-orange-50/50 to-amber-50/60 border border-orange-200/90 rounded-3xl p-4 sm:p-5 text-left shadow-soft hover:shadow-card hover:border-exa-orange transition-all duration-300 relative overflow-hidden"
+          >
+            {/* Subtle glow accent */}
+            <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-amber-400/10 to-orange-500/10 rounded-full blur-xl pointer-events-none" />
+
+            <div className="flex items-start gap-3.5 relative z-10">
+              {/* Glowing Icon Badge */}
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-exa-orange to-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-orange-500/25 group-hover:scale-105 transition-transform duration-300">
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 fill-white/20" />
+              </div>
+
+              {/* Text & Content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-exa-green-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Kartu Meja #TemanExa
+                  </span>
+
+                  {/* 5 Shiny Stars */}
+                  <div className="flex items-center text-amber-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                    ))}
+                  </div>
+                </div>
+
+                <h4 className="text-sm sm:text-base font-bold text-stone-900 group-hover:text-exa-orange transition-colors">
+                  Terima kasih sudah ngopi di Exádelfos! 👋
+                </h4>
+
+                <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+                  Ngopi asik hari ini? Ulasan bintang 5 Anda di Google Maps adalah dukungan terbaik untuk barista kami.
+                </p>
+
+                {/* Clickable Action Tag */}
+                <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-exa-orange group-hover:translate-x-1 transition-transform">
+                  <span>Klik untuk beri review bintang 5</span>
+                  <ExternalLink className="w-3.5 h-3.5 ml-0.5" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
