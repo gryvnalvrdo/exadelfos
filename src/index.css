@@ -46,6 +46,20 @@
   animation: shimmer 2s infinite;
 }
 
+/* Gentle lively bobbing animation for review star */
+@keyframes bobUpAndDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bob {
+  animation: bobUpAndDown 1.4s ease-in-out infinite;
+}
+
 /* Glassmorphism helpers */
 .glass-nav {
   background: rgba(253, 251, 247, 0.85);

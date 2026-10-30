@@ -54,13 +54,15 @@ export default function BottomNav({ onOpenCart, orderCount, orderTotal }) {
             <span className="text-[11px] font-bold">Menu</span>
           </button>
 
-          {/* Col 2: Center Google Review Button (Uniform Size with other icons) */}
+          {/* Col 2: Center Google Review Button (Uniform Size + Gentle Bobbing Animation) */}
           <button
             onClick={handleDirectReview}
             className="flex flex-col items-center justify-center gap-1 text-exa-orange hover:text-exa-orange-600 py-1 active:scale-95 transition"
             title="Beri Review di Google Maps"
           >
-            <Star className="w-5 h-5 fill-exa-orange" />
+            <div className="animate-bob flex items-center justify-center">
+              <Star className="w-5 h-5 fill-exa-orange text-exa-orange" />
+            </div>
             <span className="text-[11px] font-bold">Review</span>
           </button>
 
