@@ -56,10 +56,6 @@ export default function GoogleReviewSection() {
                 <MapPin className="w-4 h-4 text-exa-orange shrink-0" />
                 <span>{CAFE_INFO.address}</span>
               </div>
-
-              <div className="mt-2 text-[11px] text-stone-400 font-mono">
-                Place ID: {CAFE_INFO.placeId}
-              </div>
             </div>
 
             {/* Right Block: Action Buttons directly to Google */}
