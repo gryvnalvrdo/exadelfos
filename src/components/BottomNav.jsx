@@ -1,5 +1,5 @@
 import React from 'react';
-import { Coffee, ShoppingCart, Star, Sparkles, ExternalLink } from 'lucide-react';
+import { Coffee, ShoppingCart, Star } from 'lucide-react';
 import { CAFE_INFO } from '../data/menu';
 
 export default function BottomNav({ onOpenCart, orderCount, orderTotal }) {
@@ -42,12 +42,12 @@ export default function BottomNav({ onOpenCart, orderCount, orderTotal }) {
         </div>
       )}
 
-      {/* Main Bottom Nav */}
-      <div className="glass-nav border-t border-orange-100/80 px-4 py-2 flex items-center justify-around shadow-lg">
+      {/* Main Bottom Nav (3 Focused Tabs) */}
+      <div className="glass-nav border-t border-orange-100/80 px-6 py-2 flex items-center justify-between shadow-lg">
         {/* Menu Tab */}
         <button
           onClick={scrollToMenu}
-          className="flex flex-col items-center justify-center gap-1 text-stone-600 hover:text-exa-orange p-1 active:scale-95 transition"
+          className="flex flex-col items-center justify-center gap-1 text-stone-600 hover:text-exa-orange p-1.5 active:scale-95 transition"
         >
           <Coffee className="w-5 h-5 text-stone-600" />
           <span className="text-[10px] font-bold">Menu</span>
@@ -56,7 +56,7 @@ export default function BottomNav({ onOpenCart, orderCount, orderTotal }) {
         {/* Center Google Review Button - Direct Action */}
         <button
           onClick={handleDirectReview}
-          className="flex flex-col items-center justify-center -mt-5 group"
+          className="flex flex-col items-center justify-center -mt-6 group"
           title="Beri Review di Google Maps"
         >
           <div className="w-13 h-13 rounded-full bg-gradient-to-tr from-exa-orange via-amber-500 to-orange-400 p-0.5 shadow-floating transform transition group-hover:scale-105 active:scale-95">
@@ -64,7 +64,7 @@ export default function BottomNav({ onOpenCart, orderCount, orderTotal }) {
               <Star className="w-6 h-6 fill-white text-white animate-pulse" />
             </div>
           </div>
-          <span className="text-[10px] font-black text-exa-orange mt-1 flex items-center gap-0.5">
+          <span className="text-[10px] font-black text-exa-orange mt-1">
             Review ⭐
           </span>
         </button>
@@ -72,7 +72,7 @@ export default function BottomNav({ onOpenCart, orderCount, orderTotal }) {
         {/* Shopping Cart Button */}
         <button
           onClick={onOpenCart}
-          className="relative flex flex-col items-center justify-center gap-1 text-stone-600 hover:text-exa-orange p-1 active:scale-95 transition"
+          className="relative flex flex-col items-center justify-center gap-1 text-stone-600 hover:text-exa-orange p-1.5 active:scale-95 transition"
         >
           <div className="relative">
             <ShoppingCart className="w-5 h-5 text-stone-600" />
@@ -84,17 +84,6 @@ export default function BottomNav({ onOpenCart, orderCount, orderTotal }) {
           </div>
           <span className="text-[10px] font-bold">Keranjang</span>
         </button>
-
-        {/* Instagram */}
-        <a
-          href={CAFE_INFO.instagramUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex flex-col items-center justify-center gap-1 text-stone-600 hover:text-pink-600 p-1 active:scale-95 transition"
-        >
-          <Sparkles className="w-5 h-5 text-stone-600" />
-          <span className="text-[10px] font-bold">Instagram</span>
-        </a>
       </div>
     </div>
   );

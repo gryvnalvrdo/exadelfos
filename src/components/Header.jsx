@@ -1,6 +1,5 @@
 import React from 'react';
-import { Star, Clock, ShoppingBag, ExternalLink } from 'lucide-react';
-import { InstagramIcon } from './Icons';
+import { Star, ShoppingCart, ExternalLink } from 'lucide-react';
 import { CAFE_INFO } from '../data/menu';
 
 export default function Header({ orderCount, onOpenOrder }) {
@@ -15,41 +14,25 @@ export default function Header({ orderCount, onOpenOrder }) {
       <div className="absolute top-10 -right-20 w-80 h-80 rounded-full bg-exa-green-100/50 blur-3xl pointer-events-none" />
 
       <div className="max-w-4xl mx-auto relative z-10">
-        {/* Top Info Bar */}
-        <div className="flex items-center justify-between py-2 border-b border-orange-100/80 text-xs sm:text-sm text-stone-600 mb-6">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100/90 text-emerald-800 font-semibold text-[11px] sm:text-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Buka Sekarang
+        {/* Top Row: Cart Button on the Top Right Corner */}
+        <div className="flex items-center justify-end py-1 mb-5">
+          <button
+            onClick={onOpenOrder}
+            className="group relative inline-flex items-center gap-2 bg-white/95 backdrop-blur-md border border-stone-200/90 hover:border-exa-orange text-stone-800 hover:text-exa-orange px-3.5 py-2 rounded-2xl shadow-sm transition-all transform active:scale-95"
+            title="Buka Keranjang Pesanan"
+          >
+            <div className="relative flex items-center justify-center">
+              <ShoppingCart className="w-5 h-5 text-stone-700 group-hover:text-exa-orange transition-colors" />
+              {orderCount > 0 && (
+                <span className="absolute -top-2.5 -right-2.5 bg-exa-orange text-white text-[10px] font-black min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center shadow-xs">
+                  {orderCount}
+                </span>
+              )}
+            </div>
+            <span className="text-xs font-bold text-stone-800 group-hover:text-exa-orange transition-colors">
+              Keranjang {orderCount > 0 ? `(${orderCount})` : ''}
             </span>
-            <span className="hidden sm:inline-flex items-center gap-1 text-stone-500">
-              <Clock className="w-3.5 h-3.5 text-exa-orange" />
-              {CAFE_INFO.shortHours}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {/* Cart shortcut in header */}
-            {orderCount > 0 && (
-              <button
-                onClick={onOpenOrder}
-                className="inline-flex items-center gap-1.5 bg-white border border-stone-200 px-3 py-1 rounded-full text-xs font-bold text-stone-800 shadow-sm hover:border-exa-orange transition active:scale-95"
-              >
-                <ShoppingBag className="w-3.5 h-3.5 text-exa-orange" />
-                <span>Keranjang ({orderCount})</span>
-              </button>
-            )}
-
-            <a
-              href={CAFE_INFO.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-stone-700 hover:text-exa-orange font-medium transition-colors"
-            >
-              <InstagramIcon className="w-4 h-4 text-pink-600" />
-              <span className="font-semibold">@{CAFE_INFO.instagramHandle}</span>
-            </a>
-          </div>
+          </button>
         </div>
 
         {/* Brand Card & Hero */}
@@ -79,28 +62,16 @@ export default function Header({ orderCount, onOpenOrder }) {
             </p>
           </div>
 
-          {/* Action CTAs */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 w-full max-w-md">
-            {/* Primary Direct Google Review CTA */}
+          {/* Action CTA: Direct Google Review */}
+          <div className="mt-6 w-full max-w-sm">
             <button
               onClick={handleDirectReview}
-              className="flex-1 min-w-[200px] inline-flex items-center justify-center gap-2 bg-gradient-to-r from-exa-orange to-orange-500 hover:from-exa-orange-600 hover:to-orange-600 text-white font-bold text-sm px-6 py-3.5 rounded-2xl shadow-floating hover:shadow-lg transition-all duration-200 transform active:scale-95"
+              className="w-full inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-exa-orange to-orange-500 hover:from-exa-orange-600 hover:to-orange-600 text-white font-bold text-base py-3.5 px-6 rounded-2xl shadow-floating hover:shadow-lg transition-all duration-200 transform active:scale-95"
             >
-              <Star className="w-4 h-4 fill-white text-white animate-bounce-soft" />
+              <Star className="w-5 h-5 fill-white text-white animate-bounce-soft" />
               <span>Beri Review Google</span>
-              <ExternalLink className="w-3.5 h-3.5 ml-0.5 opacity-90" />
+              <ExternalLink className="w-4 h-4 ml-0.5 opacity-90" />
             </button>
-
-            {/* Instagram Quick Link */}
-            <a
-              href={CAFE_INFO.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-exa-green hover:bg-exa-green-600 text-white font-semibold text-sm px-5 py-3.5 rounded-2xl shadow-sm transition-all duration-200 active:scale-95"
-            >
-              <InstagramIcon className="w-4 h-4 text-orange-200" />
-              <span>Instagram</span>
-            </a>
           </div>
 
           {/* Review Card Tap Notice */}
